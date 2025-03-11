@@ -41,7 +41,7 @@ class TolgeeModuleService {
         };
     }
 
-    async getLanguages() {
+    async getOptions() {
         try {
             const { data } = await this.client_.get<TolgeeLanguagesResponse>(`/languages`);
 
@@ -54,7 +54,12 @@ class TolgeeModuleService {
                 label: lang.name,
                 tag: lang.tag,
             }));
-            return { defaultLanguage: this.defaultLanguage, availableLanguages };
+            return {
+                defaultLanguage: this.defaultLanguage,
+                availableLanguages,
+                apiKey: this.options_.apiKey,
+                apiUrl: this.options_.baseURL
+            };
         } catch (error) {
             throw new MedusaError(
                 MedusaError.Types.UNEXPECTED_STATE,

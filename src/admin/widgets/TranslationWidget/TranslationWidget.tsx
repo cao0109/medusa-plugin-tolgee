@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { defineWidgetConfig } from "@medusajs/admin-sdk"
 import { AdminProduct, DetailWidgetProps } from "@medusajs/framework/types"
 import { useQuery } from "@tanstack/react-query"
@@ -7,7 +6,8 @@ import { InContextTools } from "@tolgee/web/tools";
 
 import TranslationManagement from "../../components/TranslationManagement";
 import { sdk } from "../../lib/sdk";
-import { toast } from "@medusajs/ui";
+import { toast as notify } from "@medusajs/ui";
+import { useEffect, useState } from "react";
 
 interface Language {
   label: string;
@@ -17,10 +17,11 @@ interface Language {
 export interface ResponseData {
   defaultLanguage: string;
   availableLanguages: Language[];
+  apiKey: string;
+  apiUrl: string;
 }
 
 const TranslationWidget = ({ data: product }: DetailWidgetProps<AdminProduct>) => {
-  const notify = toast
   const [tolgee, setTolgee] = useState<TolgeeInstance | null>(null);
 
   const { data } = useQuery<ResponseData>({
@@ -36,8 +37,8 @@ const TranslationWidget = ({ data: product }: DetailWidgetProps<AdminProduct>) =
         .use(FormatSimple())
         .init({
           language: data.defaultLanguage,
-          apiUrl: import.meta.env.VITE_ADMIN_TOLGEE_API_URL,
-          apiKey: import.meta.env.VITE_ADMIN_TOLGEE_API_KEY,
+          apiUrl: data.apiUrl,
+          apiKey: data.apiKey,
           availableLanguages: languages,
           observerOptions: {
             highlightColor: "rgba(0,0,0,0.7)",

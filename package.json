@@ -2,7 +2,7 @@
   "name": "medusa-plugin-tolgee",
   "description": "Medusa V2 Plugin to easily add translations to your models with Tolgee ",
   "author": "SteelRazor47",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -49,6 +49,7 @@
     "@medusajs/cli": "2.6.2-snapshot-20250310153842",
     "@medusajs/framework": "2.6.2-snapshot-20250310153842",
     "@medusajs/icons": "2.6.2-snapshot-20250310153842",
+    "@medusajs/js-sdk": "2.6.2-snapshot-20250310153842",
     "@medusajs/medusa": "2.6.2-snapshot-20250310153842",
     "@medusajs/test-utils": "2.6.2-snapshot-20250310153842",
     "@medusajs/utils": "2.6.2-snapshot-20250310153842",
@@ -69,6 +70,7 @@
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2",
     "vite": "^5.2.11",
@@ -91,6 +93,7 @@
     "pg": "^8.13.0"
   },
   "dependencies": {
+    "@tolgee/core": "^6.2.2",
     "@tolgee/react": "^6.2.2",
     "@tolgee/web": "^6.2.2"
   },

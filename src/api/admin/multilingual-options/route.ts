@@ -4,7 +4,7 @@ import { TOLGEE_MODULE } from "../../../modules/tolgee";
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const translationModule = req.scope.resolve(TOLGEE_MODULE);
 
-  const languages = await translationModule.getLanguages()
+  const languages = await translationModule.getOptions()
     .catch((err) => { res.status(500).json(err); });
 
   res.json(languages);
