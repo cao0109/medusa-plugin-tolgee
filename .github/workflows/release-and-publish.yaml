@@ -1,8 +1,6 @@
 on:
   push:
     branches: [ "main" ]
-    tags:
-      - "v*.*.*"
   workflow_dispatch:
 
 jobs:
@@ -26,11 +24,14 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Enable corepack
+        run: |
+          npm i -g corepack@latest
+          corepack enable
+
       - name: Install Dependencies
         run: pnpm i
 
-      - name: Build plugin
-        run: npx medusa plugin:build 
 
       - name: Publish plugin
         run: pnpm publish
