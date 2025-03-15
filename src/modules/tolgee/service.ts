@@ -117,18 +117,21 @@ class TolgeeModuleService {
 
     async list(
         filter: {
-            id: string | string[]
+            id: string | string[],
+            context?: { country_code: string }
         }
     ) {
         try {
+            const country_code = filter.context?.country_code?.toLowerCase()
+
             const ids = Array.isArray(filter.id) ? filter.id : [filter.id]
             const langs = (await this.getOptions()).availableLanguages.map((lang) => lang.tag).join(",");
             const response = await Promise.all(ids.map(async id => {
-                const { data } = await this.client_.get(`/translations/${langs}?ns=${id}`)
+                const { data } = await this.client_.get(`/translations/${country_code ?? langs}?ns=${id}`)
                 for (const key in data) {
                     data[key] = data[key][id]
                 }
-                return { id, ...data }
+                return { id, ...(country_code ? data[country_code] : data) }
             }))
 
             return response;

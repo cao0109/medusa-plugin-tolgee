@@ -12,8 +12,9 @@ import { ShippingOptionCard } from "../components/shipping-option-card";
 
 const ShippingOptionWidget = TranslationWidget("shipping_option");
 
-const SOWidget = ({ data: { id = "" } }: DetailWidgetProps<AdminStockLocation>) => {
-    if (!id) return null; // TODO: remove after upgrade to 2.6.2
+const SOWidget = ({ data }: DetailWidgetProps<AdminStockLocation>) => {
+    if (!data) return null; // TODO: remove after upgrade to 2.6.2
+    const { id } = data;
 
     const { data: { stock_location } = {}, isLoading } = useQuery({
         queryFn: () => sdk.admin.stockLocation.retrieve(id, { fields: "name,*sales_channels,*address,fulfillment_sets.type,fulfillment_sets.name,*fulfillment_sets.service_zones.geo_zones,*fulfillment_sets.service_zones,*fulfillment_sets.service_zones.shipping_options,*fulfillment_sets.service_zones.shipping_options.rules,*fulfillment_sets.service_zones.shipping_options.shipping_profile,*fulfillment_providers" }),
