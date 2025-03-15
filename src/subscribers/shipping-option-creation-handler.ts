@@ -3,20 +3,20 @@ import {
     type SubscriberArgs,
 } from "@medusajs/medusa";
 import { TOLGEE_MODULE } from "../modules/tolgee";
-import { Modules, ProductEvents } from "@medusajs/framework/utils";
+import { FulfillmentEvents, Modules } from "@medusajs/framework/utils";
 
 export default async function productCreationHandler({
     event: { data },
     container,
 }: SubscriberArgs<{ id: string }>) {
-    const productService = container.resolve(Modules.PRODUCT);
+    const fulfillmentModule = container.resolve(Modules.FULFILLMENT);
     const translationModule = container.resolve(TOLGEE_MODULE);
     const { id } = data;
 
-    const product = await productService.retrieveProduct(id);
-    await translationModule.createModelTranslations([product], "product");
+    const option = await fulfillmentModule.retrieveShippingOption(id);
+    await translationModule.createModelTranslations([option], "shipping_option");
 }
 
 export const config: SubscriberConfig = {
-    event: ProductEvents.PRODUCT_CREATED
+    event: FulfillmentEvents.SHIPPING_OPTION_CREATED
 };

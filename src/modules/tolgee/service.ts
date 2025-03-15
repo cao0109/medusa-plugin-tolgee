@@ -1,13 +1,19 @@
 import { AxiosInstance, default as axios } from "axios";
 import { MedusaError } from "@medusajs/utils";
-import { ProductDTO } from "@medusajs/framework/types";
+import { ProductCategoryDTO, ProductCollectionDTO, ProductDTO, ShippingOptionDTO } from "@medusajs/framework/types";
+import { TolgeeAdminOptions, defaultSupportedProperties, SupportedModels } from "../../common";
 
 export type TolgeeModuleConfig = {
-    productsKeys?: string[];
-    projectId?: string;
+    projectId: string;
     apiKey: string;
     baseURL: string;
+    keys?: {
+        [key in SupportedModels]?: string[];
+    };
 };
+
+type TolgeeModuleConfigInternal = Omit<TolgeeModuleConfig, "keys"> &
+{ keys: Required<TolgeeModuleConfig["keys"]> };
 
 type TolgeeLanguagesResponse = {
     _embedded: {
@@ -21,8 +27,9 @@ type TolgeeLanguagesResponse = {
 
 class TolgeeModuleService {
     protected client_: AxiosInstance;
-    protected defaultLanguage: string;
-    readonly options_: TolgeeModuleConfig;
+    protected defaultLanguage: TolgeeAdminOptions["defaultLanguage"];
+    protected availableLanguages: TolgeeAdminOptions["availableLanguages"];
+    readonly options_: TolgeeModuleConfigInternal;
 
     constructor({ }, options: TolgeeModuleConfig) {
 
@@ -37,26 +44,30 @@ class TolgeeModuleService {
 
         this.options_ = {
             ...options,
-            productsKeys: options.productsKeys ?? ["title", "subtitle", "description"],
+            keys: {
+                ...defaultSupportedProperties,
+                ...options.keys,
+            },
         };
     }
 
-    async getOptions() {
+    async getOptions(): Promise<TolgeeAdminOptions> {
         try {
             const { data } = await this.client_.get<TolgeeLanguagesResponse>(`/languages`);
 
             const languages = data?._embedded?.languages
             if (!languages)
-                return []
+                return { defaultLanguage: "en", availableLanguages: [], apiKey: "", apiUrl: "" }
 
             this.defaultLanguage = languages.find((lang) => lang.base)?.tag ?? languages[0].tag;
-            const availableLanguages = languages.map((lang) => ({
+            this.availableLanguages = languages.map((lang) => ({
                 label: lang.name,
                 tag: lang.tag,
             }));
+
             return {
                 defaultLanguage: this.defaultLanguage,
-                availableLanguages,
+                availableLanguages: this.availableLanguages ?? [],
                 apiKey: this.options_.apiKey,
                 apiUrl: this.options_.baseURL
             };
@@ -68,17 +79,18 @@ class TolgeeModuleService {
         }
     }
 
-    async getNamespaceKeys(productId: string): Promise<string[]> {
+    async getNamespaceKeys(id: string | string[]): Promise<string[]> {
+        const ids = Array.isArray(id) ? id : [id];
         try {
             const response = await this.client_.get(
-                `/keys/select?filterNamespace=${productId}`
+                `/keys/select?filterNamespace=${ids.join(",")}`
             );
 
             return response.data.ids;
         } catch (error) {
             throw new MedusaError(
                 MedusaError.Types.UNEXPECTED_STATE,
-                `Failed to fetch namespace keys for product ${productId}: ${error.message}`
+                `Failed to fetch namespace keys for ${id}: ${error.message}`
             );
         }
     }
@@ -97,29 +109,53 @@ class TolgeeModuleService {
     }
 
     async getProductTranslationKeys(
-        productId: string
-    ): Promise<string[] | any[]> {
-        const ids = await this.getNamespaceKeys(productId);
+        ids: string | string[]
+    ) {
+        const keys = await this.getNamespaceKeys(ids);
+        return await Promise.all(keys.map((keyId) => this.getKeyName(keyId)));
+    }
 
-        return await Promise.all(ids.map((keyId) => this.getKeyName(keyId)));
+    async list(
+        filter: {
+            id: string | string[]
+        }
+    ) {
+        try {
+            const ids = Array.isArray(filter.id) ? filter.id : [filter.id]
+            const langs = (await this.getOptions()).availableLanguages.map((lang) => lang.tag).join(",");
+            const response = await Promise.all(ids.map(async id => {
+                const { data } = await this.client_.get(`/translations/${langs}?ns=${id}`)
+                for (const key in data) {
+                    data[key] = data[key][id]
+                }
+                return { id, ...data }
+            }))
+
+            return response;
+        } catch (error) {
+            throw new MedusaError(
+                MedusaError.Types.UNEXPECTED_STATE,
+                `Failed to fetch translations for key ID ${filter.id}: ${error.message}`
+            );
+        }
     }
 
     async createNewKeyWithTranslation(keys: {
-        productId: string,
+        id: string,
         keyName: string,
         translation: string
     }[]): Promise<any> {
         try {
-            const response = await this.client_.post(`/keys/import`,
+            await this.client_.post(`/keys/import`,
                 {
-                    keys: keys.map(({ productId, keyName, translation }) => ({
-                        name: `${productId}.${keyName}`,
-                        namespace: productId,
+                    keys: keys.map(({ id, keyName, translation }) => ({
+                        name: `${id}.${keyName}`,
+                        namespace: id,
                         translations: { [this.defaultLanguage!]: translation },
                     }))
                 });
 
-            return response.data;
+            return
         } catch (error) {
             console.error(error)
             throw new MedusaError(
@@ -129,42 +165,38 @@ class TolgeeModuleService {
         }
     }
 
-    async createProductTranslations(
-        products: ProductDTO[]
-    ): Promise<any[]> {
-        const results = [] as any[];
-
-        const keys = products.flatMap((product) =>
-            this.options_.productsKeys?.map((productKey) => ({
-                productId: product.id,
-                keyName: productKey,
-                translation: product?.[productKey] ?? ""
+    async createModelTranslations(
+        models: (ProductDTO | ProductCategoryDTO | ProductCollectionDTO | ShippingOptionDTO)[],
+        type: SupportedModels
+    ): Promise<string[]> {
+        const keys = models.flatMap((model) =>
+            this.options_.keys?.[type]?.map((key) => ({
+                id: model.id,
+                keyName: key,
+                translation: model?.[key] ?? ""
             })) ?? []
         );
 
         try {
-            const res = await this.createNewKeyWithTranslation(keys) ?? []
-            results.push(res)
+            await this.createNewKeyWithTranslation(keys)
+            return models.map((model) => model.id);
         } catch (error) {
-            console.error('Product already translated or error creating translations.', error);
+            console.error(`Entities of type ${type} already translated or error creating translations: ${models.map((model) => model.id)}`, error);
+            return []
         }
-
-        return results;
     }
 
-    async deleteProductTranslations(productId: string): Promise<void> {
-        const productTranslationKeys = await this.getNamespaceKeys(productId);
+    async deleteTranslation(id: string): Promise<void> {
+        const keys = await this.getNamespaceKeys(id);
 
         try {
-            const response = await this.client_.delete(
-                `/keys/${productTranslationKeys}`
-            );
+            const response = await this.client_.delete(`/keys/${keys}`);
 
             return response.data;
         } catch (error) {
             throw new MedusaError(
                 MedusaError.Types.UNEXPECTED_STATE,
-                `Failed to delete product translations for product ${productId}: ${error.message}`
+                `Failed to delete translations for namespace ${id}: ${error.message}`
             );
         }
     }

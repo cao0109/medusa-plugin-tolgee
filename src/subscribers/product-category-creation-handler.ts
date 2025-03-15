@@ -5,7 +5,7 @@ import {
 import { TOLGEE_MODULE } from "../modules/tolgee";
 import { Modules, ProductEvents } from "@medusajs/framework/utils";
 
-export default async function productCreationHandler({
+export default async function productCategoryCreationHandler({
     event: { data },
     container,
 }: SubscriberArgs<{ id: string }>) {
@@ -13,10 +13,10 @@ export default async function productCreationHandler({
     const translationModule = container.resolve(TOLGEE_MODULE);
     const { id } = data;
 
-    const product = await productService.retrieveProduct(id);
-    await translationModule.createModelTranslations([product], "product");
+    const category = await productService.retrieveProductCategory(id);
+    await translationModule.createModelTranslations([category], "product_category");
 }
 
 export const config: SubscriberConfig = {
-    event: ProductEvents.PRODUCT_CREATED
+    event: ProductEvents.PRODUCT_CATEGORY_CREATED
 };
