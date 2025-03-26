@@ -9,12 +9,15 @@ import TranslationWidget from "../components/TranslationWidget";
 import { Header } from "../components/header";
 import { Container } from "../components/container";
 import { ShippingOptionCard } from "../components/shipping-option-card";
+import { useTranslation } from "react-i18next"
+import PluginI18n from "../components/PluginI18n";
 
 const ShippingOptionWidget = TranslationWidget("shipping_option");
 
 const SOWidget = ({ data }: DetailWidgetProps<AdminStockLocation>) => {
     if (!data) return null; // TODO: remove after upgrade to 2.6.2
     const { id } = data;
+    const { t } = useTranslation("tolgee")
 
     const { data: { stock_location } = {}, isLoading } = useQuery({
         queryFn: () => sdk.admin.stockLocation.retrieve(id, { fields: "name,*sales_channels,*address,fulfillment_sets.type,fulfillment_sets.name,*fulfillment_sets.service_zones.geo_zones,*fulfillment_sets.service_zones,*fulfillment_sets.service_zones.shipping_options,*fulfillment_sets.service_zones.shipping_options.rules,*fulfillment_sets.service_zones.shipping_options.shipping_profile,*fulfillment_providers" }),
@@ -33,13 +36,15 @@ const SOWidget = ({ data }: DetailWidgetProps<AdminStockLocation>) => {
     const isEmpty = !shipping_options?.length;
 
     return (
-        <Container>
-            <Header title="Translations" subtitle={isEmpty ? "No shipping options yet" : undefined} />
-            {isLoading ?
-                <div className="px-6 py-4">Loading...</div> :
-                !isEmpty && ShippingOptionsGrid(shipping_options)
-            }
-        </Container>
+        <PluginI18n>
+            <Container>
+                <Header title={t("shippingOptionsList.title")} subtitle={isEmpty ? "No shipping options yet" : undefined} />
+                {isLoading ?
+                    <div className="px-6 py-4">Loading...</div> :
+                    !isEmpty && ShippingOptionsGrid(shipping_options)
+                }
+            </Container>
+        </PluginI18n>
     )
 }
 
@@ -48,7 +53,6 @@ export const config = defineWidgetConfig({
 })
 
 export default SOWidget;
-
 
 function ShippingOptionsGrid(shipping_options: {
     fset_type: string;

@@ -52,8 +52,8 @@
     "@medusajs/js-sdk": "2.6.2-snapshot-20250310153842",
     "@medusajs/medusa": "2.6.2-snapshot-20250310153842",
     "@medusajs/test-utils": "2.6.2-snapshot-20250310153842",
-    "@medusajs/utils": "2.6.2-snapshot-20250310153842",
     "@medusajs/ui": "4.0.8-snapshot-20250310153842",
+    "@medusajs/utils": "2.6.2-snapshot-20250310153842",
     "@mikro-orm/cli": "6.4.3",
     "@mikro-orm/core": "6.4.3",
     "@mikro-orm/knex": "6.4.3",
@@ -70,6 +70,7 @@
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^13.5.0",
     "react-router-dom": "^6.20.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2",
@@ -90,7 +91,8 @@
     "@mikro-orm/migrations": "6.4.3",
     "@mikro-orm/postgresql": "6.4.3",
     "awilix": "^8.0.1",
-    "pg": "^8.13.0"
+    "pg": "^8.13.0",
+    "react-i18next": "^13.5.0"
   },
   "dependencies": {
     "@tolgee/core": "^6.2.2",

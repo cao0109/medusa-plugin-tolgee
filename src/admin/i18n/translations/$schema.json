@@ -1,0 +1,65 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "loading": {
+            "type": "string"
+        },
+        "shippingOptionsList": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "title"
+            ]
+        },
+        "widget": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "subtitle": {
+                    "type": "string"
+                },
+                "subtitleEmpty": {
+                    "type": "string"
+                },
+                "notTranslated": {
+                    "type": "string"
+                },
+                "add": {
+                    "type": "string"
+                },
+                "syncAll": {
+                    "type": "string"
+                },
+                "selectLanguage": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "title",
+                "subtitle",
+                "subtitleEmpty",
+                "notTranslated",
+                "add",
+                "syncAll",
+                "selectLanguage"
+            ]
+        }
+    },
+    "required": [
+        "$schema",
+        "shippingOptionsList",
+        "widget",
+        "loading"
+    ],
+    "additionalProperties": false
+}

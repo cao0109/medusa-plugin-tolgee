@@ -10,6 +10,7 @@ import { SectionRow } from "./section-row";
 import { useMemo } from "react";
 import { TolgeeAdminOptions, SupportedModels } from "../../common";
 import { InContextTools } from "@tolgee/web/tools";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   id: string;
@@ -24,6 +25,8 @@ const TranslationManagement = ({
   availableLanguages,
   defaultLanguage,
 }: Props) => {
+  const { t: adminT } = useTranslation("tolgee")
+
   const { t } = useTranslate(id);
   const tolgee = useTolgee()
   const client = useQueryClient();
@@ -80,7 +83,7 @@ const TranslationManagement = ({
   const syncAllAction = {
     type: "button",
     props: {
-      children: "Sync all",
+      children: adminT("widget.syncAll"),
       onClick: () => syncTranslation(),
       isLoading: syncing,
       variant: "secondary",
@@ -95,7 +98,7 @@ const TranslationManagement = ({
         defaultValue={defaultLanguage}
       >
         <Select.Trigger>
-          <Select.Value placeholder="Select a language" />
+          <Select.Value placeholder={adminT("widget.selectLanguage")} />
         </Select.Trigger>
         <Select.Content>
           {availableLanguages.map((item) => (
@@ -112,7 +115,7 @@ const TranslationManagement = ({
     {
       type: "button",
       props: {
-        children: "Add",
+        children: adminT("widget.add"),
         onClick: () => addTranslation(),
         isLoading: adding,
         variant: "secondary",
@@ -130,21 +133,18 @@ const TranslationManagement = ({
   return (
     <Container>
       <Header
-        title="Translations"
-        subtitle={keyNames?.length > 0 ?
-          "To translate, ALT+click on the value." :
-          "No translations present yet."
-        }
+        title={adminT("widget.title")}
+        subtitle={keyNames?.length > 0 ? adminT("widget.subtitle") : adminT("widget.subtitleEmpty")}
         actions={actions}
       />
 
-      {isLoading ? <SectionRow title="Loading..." /> :
+      {isLoading ? <SectionRow title={adminT("loading")} /> :
         keyNames.map((keyName) =>
           // TODO: bug: value not refreshed when first added by in-context tool(stays default)
           <SectionRow
             key={keyName}
             title={formatKeyName(keyName)}
-            value={t(keyName, "Not translated (press ALT + click the word)")}
+            value={t(keyName, adminT("widget.notTranslated"))}
           />
         )
       }

@@ -1,0 +1,16 @@
+{
+    "$schema": "./$schema.json",
+    "shippingOptionsList": {
+        "title": "Traduzioni"
+    },
+    "widget": {
+        "title": "Traduzioni",
+        "subtitle": "Per tradurre, premi ALT+click sul valore.",
+        "subtitleEmpty": "Non sono ancora presenti traduzioni.",
+        "notTranslated": "Non tradotto (premi ALT + click qui)",
+        "add": "Aggiungi",
+        "syncAll": "Sincronizza tutto",
+        "selectLanguage": "Seleziona lingua"
+    },
+    "loading": "Caricamento..."
+}

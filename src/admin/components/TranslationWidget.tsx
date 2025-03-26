@@ -7,6 +7,7 @@ import TranslationManagement from "./TranslationManagement";
 import { sdk } from "../lib/sdk";
 import { useEffect, useState } from "react";
 import { TolgeeAdminOptions, SupportedModels, WidgetType } from "../../common";
+import PluginI18n from "./PluginI18n";
 
 export const TranslationWidget = <T extends SupportedModels>(slug: T) =>
   ({ data: { id } }: DetailWidgetProps<WidgetType<T>>) => {
@@ -40,18 +41,20 @@ export const TranslationWidget = <T extends SupportedModels>(slug: T) =>
 
     return (
       <>
-        {tolgee ? (
-          <TolgeeProvider tolgee={tolgee} fallback="Loading...">
-            <TranslationManagement
-              id={id}
-              slug={slug}
-              availableLanguages={data?.availableLanguages || []}
-              defaultLanguage={data?.defaultLanguage || "en"}
-            />
-          </TolgeeProvider>
-        ) : (
-          <div>Loading...</div>
-        )}
+        <PluginI18n>
+          {tolgee ? (
+            <TolgeeProvider tolgee={tolgee} fallback="Loading...">
+              <TranslationManagement
+                id={id}
+                slug={slug}
+                availableLanguages={data?.availableLanguages || []}
+                defaultLanguage={data?.defaultLanguage || "en"}
+              />
+            </TolgeeProvider>
+          ) : (
+            <div>Loading...</div>
+          )}
+        </PluginI18n>
       </>
     );
   };
