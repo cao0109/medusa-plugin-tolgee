@@ -18,7 +18,7 @@ const SOWidget = ({ data }: DetailWidgetProps<AdminStockLocation>) => {
 
     const { data: { stock_location } = {}, isLoading } = useQuery({
         queryFn: () => sdk.admin.stockLocation.retrieve(id, { fields: "name,*sales_channels,*address,fulfillment_sets.type,fulfillment_sets.name,*fulfillment_sets.service_zones.geo_zones,*fulfillment_sets.service_zones,*fulfillment_sets.service_zones.shipping_options,*fulfillment_sets.service_zones.shipping_options.rules,*fulfillment_sets.service_zones.shipping_options.shipping_profile,*fulfillment_providers" }),
-        queryKey: ["tolgee-stock-location", id],
+        queryKey: ["shipping_options"],
     })
 
     const shipping_options = stock_location?.fulfillment_sets
