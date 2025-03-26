@@ -1,5 +1,5 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk";
-import { AdminStockLocation, DetailWidgetProps } from "@medusajs/framework/types";
+import { AdminShippingOption, AdminStockLocation, DetailWidgetProps } from "@medusajs/framework/types";
 import { useQuery } from "@tanstack/react-query";
 import { sdk } from "../lib/sdk";
 import { Drawer, Heading, IconButton, Kbd } from "@medusajs/ui";
@@ -30,63 +30,15 @@ const SOWidget = ({ data }: DetailWidgetProps<AdminStockLocation>) => {
                     option
                 })))) ?? []
 
+    const isEmpty = !shipping_options?.length;
+
     return (
         <Container>
-            <Header title="Translations" />
-            <div className="px-6 py-4 grid gap-4 grid-cols-1 sm:grid-cols-2">
-                {isLoading ? "Loading..." : (
-                    shipping_options?.map(({ option, zone_name, fset_type }) =>
-                        <Drawer modal={false}>
-                            <Drawer.Trigger asChild>
-                                <button>
-                                    <ShippingOptionCard labelKey={option.name} descriptionKey={`${fset_type} - ${zone_name}`} />
-                                </button>
-                            </Drawer.Trigger>
-                            <Drawer.Content
-                                onInteractOutside={e => e.preventDefault()}
-                                className="bg-ui-contrast-bg-base text-ui-code-fg-subtle !shadow-elevation-commandbar overflow-hidden border border-none max-md:inset-x-2 max-md:max-w-[calc(100%-16px)]"
-                            >
-                                <div className="bg-ui-code-bg-base flex items-center justify-between px-6 py-4">
-                                    <div className="flex items-center gap-x-4">
-                                        <Drawer.Title asChild>
-                                            <Heading className="text-ui-contrast-fg-primary">
-                                                Translations
-                                            </Heading>
-                                        </Drawer.Title>
-                                        <Drawer.Description className="sr-only">
-                                            {`Drawer with translations for shipping option ${option.name}`}
-                                        </Drawer.Description>
-                                    </div>
-                                    <div className="flex items-center gap-x-2">
-                                        <Kbd className="bg-ui-contrast-bg-subtle border-ui-contrast-border-base text-ui-contrast-fg-secondary">
-                                            esc
-                                        </Kbd>
-                                        <Drawer.Close asChild >
-                                            <IconButton
-                                                size="small"
-                                                variant="transparent"
-                                                className="text-ui-contrast-fg-secondary hover:text-ui-contrast-fg-primary hover:bg-ui-contrast-bg-base-hover active:bg-ui-contrast-bg-base-pressed focus-visible:bg-ui-contrast-bg-base-hover focus-visible:shadow-borders-interactive-with-active"
-                                            >
-                                                <XMarkMini />
-                                            </IconButton>
-                                        </Drawer.Close>
-                                    </div>
-                                </div>
-                                <Drawer.Body className="flex flex-1 flex-col overflow-hidden px-[5px] py-0 pb-[5px]">
-                                    <div className="bg-ui-contrast-bg-subtle flex-1 overflow-auto rounded-b-[4px] rounded-t-lg p-3">
-                                        <Suspense
-                                            fallback={<div className="flex size-full flex-col"></div>}
-                                        >
-                                            <ShippingOptionWidget data={option} />
-                                        </Suspense>
-                                    </div>
-                                </Drawer.Body>
-                            </Drawer.Content>
-                        </Drawer>
-                    )
-                )
-                }
-            </div>
+            <Header title="Translations" subtitle={isEmpty ? "No shipping options yet" : undefined} />
+            {isLoading ?
+                <div className="px-6 py-4">Loading...</div> :
+                !isEmpty && ShippingOptionsGrid(shipping_options)
+            }
         </Container>
     )
 }
@@ -96,3 +48,64 @@ export const config = defineWidgetConfig({
 })
 
 export default SOWidget;
+
+
+function ShippingOptionsGrid(shipping_options: {
+    fset_type: string;
+    zone_name: string;
+    option: AdminShippingOption;
+}[]) {
+    return (
+        <div className="px-6 py-4 grid gap-4 grid-cols-1 sm:grid-cols-2">
+            {shipping_options?.map(({ option, zone_name, fset_type }) => (
+                <Drawer modal={false}>
+                    <Drawer.Trigger asChild>
+                        <button>
+                            <ShippingOptionCard labelKey={option.name} descriptionKey={`${fset_type} - ${zone_name}`} />
+                        </button>
+                    </Drawer.Trigger>
+                    <Drawer.Content
+                        onInteractOutside={e => e.preventDefault()}
+                        className="bg-ui-contrast-bg-base text-ui-code-fg-subtle !shadow-elevation-commandbar overflow-hidden border border-none max-md:inset-x-2 max-md:max-w-[calc(100%-16px)]"
+                    >
+                        <div className="bg-ui-code-bg-base flex items-center justify-between px-6 py-4">
+                            <div className="flex items-center gap-x-4">
+                                <Drawer.Title asChild>
+                                    <Heading className="text-ui-contrast-fg-primary">
+                                        Translations
+                                    </Heading>
+                                </Drawer.Title>
+                                <Drawer.Description className="sr-only">
+                                    {`Drawer with translations for shipping option ${option.name}`}
+                                </Drawer.Description>
+                            </div>
+                            <div className="flex items-center gap-x-2">
+                                <Kbd className="bg-ui-contrast-bg-subtle border-ui-contrast-border-base text-ui-contrast-fg-secondary">
+                                    esc
+                                </Kbd>
+                                <Drawer.Close asChild>
+                                    <IconButton
+                                        size="small"
+                                        variant="transparent"
+                                        className="text-ui-contrast-fg-secondary hover:text-ui-contrast-fg-primary hover:bg-ui-contrast-bg-base-hover active:bg-ui-contrast-bg-base-pressed focus-visible:bg-ui-contrast-bg-base-hover focus-visible:shadow-borders-interactive-with-active"
+                                    >
+                                        <XMarkMini />
+                                    </IconButton>
+                                </Drawer.Close>
+                            </div>
+                        </div>
+                        <Drawer.Body className="flex flex-1 flex-col overflow-hidden px-[5px] py-0 pb-[5px]">
+                            <div className="bg-ui-contrast-bg-subtle flex-1 overflow-auto rounded-b-[4px] rounded-t-lg p-3">
+                                <Suspense
+                                    fallback={<div className="flex size-full flex-col"></div>}
+                                >
+                                    <ShippingOptionWidget data={option} />
+                                </Suspense>
+                            </div>
+                        </Drawer.Body>
+                    </Drawer.Content>
+                </Drawer>
+            ))}
+        </div>
+    )
+}

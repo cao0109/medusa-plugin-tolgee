@@ -8,8 +8,8 @@ import { sdk } from "../lib/sdk";
 import { useEffect, useState } from "react";
 import { TolgeeAdminOptions, SupportedModels, WidgetType } from "../../common";
 
-export const TranslationWidget = (slug: SupportedModels) =>
-  ({ data: { id } }: DetailWidgetProps<WidgetType<SupportedModels>>) => {
+export const TranslationWidget = <T extends SupportedModels>(slug: T) =>
+  ({ data: { id } }: DetailWidgetProps<WidgetType<T>>) => {
     const [tolgee, setTolgee] = useState<TolgeeInstance | null>(null);
 
     const { data } = useQuery<TolgeeAdminOptions>({
