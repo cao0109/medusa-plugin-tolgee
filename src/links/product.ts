@@ -1,20 +1,4 @@
-import { defineLink } from "@medusajs/framework/utils"
 import ProductModule from "@medusajs/medusa/product"
-import { TOLGEE_MODULE } from "../modules/tolgee"
+import linkFactory from "./link-factory"
 
-export default defineLink(
-    {
-        ...ProductModule.linkable.product.id,
-        field: "id",
-    },
-    {
-        linkable: {
-            serviceName: TOLGEE_MODULE,
-            alias: "translations",
-            primaryKey: "id",
-        },
-    },
-    {
-        readOnly: true,
-    }
-)
+export default linkFactory(ProductModule.linkable.product.id)
