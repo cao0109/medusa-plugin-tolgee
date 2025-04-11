@@ -7,7 +7,6 @@ import { sdk } from "../lib/sdk";
 import { Container } from "./container";
 import { Header } from "./header";
 import { SectionRow } from "./section-row";
-import { useMemo } from "react";
 import { TolgeeAdminOptions, SupportedModels } from "../../common";
 import { InContextTools } from "@tolgee/web/tools";
 import { useTranslation } from "react-i18next";
@@ -16,14 +15,12 @@ type Props = {
   id: string;
   slug: SupportedModels
   availableLanguages: TolgeeAdminOptions["availableLanguages"];
-  defaultLanguage: TolgeeAdminOptions["defaultLanguage"];
 };
 
 const TranslationManagement = ({
   id,
   slug,
-  availableLanguages,
-  defaultLanguage,
+  availableLanguages
 }: Props) => {
   const { t: adminT } = useTranslation("tolgee")
 
@@ -35,7 +32,6 @@ const TranslationManagement = ({
     if (!tolgee) return
 
     await tolgee.changeLanguage(lang);
-    tolgee.addPlugin(InContextTools())
   };
 
   const { mutateAsync: syncTranslation, isPending: syncing } =
@@ -90,27 +86,6 @@ const TranslationManagement = ({
     }
   } as const
 
-  const selectLanguageAction = {
-    type: "custom",
-    children: (
-      <Select
-        onValueChange={handleLanguageChange}
-        defaultValue={defaultLanguage}
-      >
-        <Select.Trigger>
-          <Select.Value placeholder={adminT("widget.selectLanguage")} />
-        </Select.Trigger>
-        <Select.Content>
-          {availableLanguages.map((item) => (
-            <Select.Item key={item.tag} value={item.tag}>
-              {item.label}
-            </Select.Item>
-          ))}
-        </Select.Content>
-      </Select>
-    )
-  } as const
-
   const addTranslationAction =
     {
       type: "button",
@@ -123,24 +98,35 @@ const TranslationManagement = ({
     } as const
 
 
-  const actions = useMemo(() => {
-    if (isLoading) return []
-    if (keyNames?.length > 0) return [selectLanguageAction]
-    return [addTranslationAction, syncAllAction]
-  }, [isLoading, keyNames?.length])
-
-
   return (
     <Container>
       <Header
         title={adminT("widget.title")}
         subtitle={keyNames?.length > 0 ? adminT("widget.subtitle") : adminT("widget.subtitleEmpty")}
-        actions={actions}
+        actions={keyNames?.length <= 0 ? [addTranslationAction, syncAllAction] : [{
+          type: "custom",
+          children: (
+            <Select
+              onValueChange={handleLanguageChange}
+              value={tolgee.getLanguage()}
+            >
+              <Select.Trigger>
+                <Select.Value placeholder={adminT("widget.selectLanguage")} />
+              </Select.Trigger>
+              <Select.Content>
+                {availableLanguages.map((item) => (
+                  <Select.Item key={item.tag} value={item.tag}>
+                    {item.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+          )
+        }]}
       />
 
       {isLoading ? <SectionRow title={adminT("loading")} /> :
         keyNames.map((keyName) =>
-          // TODO: bug: value not refreshed when first added by in-context tool(stays default)
           <SectionRow
             key={keyName}
             title={formatKeyName(keyName)}
