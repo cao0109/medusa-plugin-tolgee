@@ -13,10 +13,29 @@
             "properties": {
                 "title": {
                     "type": "string"
+                },
+                "empty": {
+                    "type": "string"
                 }
             },
             "required": [
-                "title"
+                "title",
+                "empty"
+            ]
+        },
+        "productOptionsList": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "empty": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "title",
+                "empty"
             ]
         },
         "widget": {

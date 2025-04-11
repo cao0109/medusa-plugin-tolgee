@@ -1,7 +1,12 @@
 {
     "$schema": "./$schema.json",
     "shippingOptionsList": {
-        "title": "Traduzioni"
+        "title": "Traduzioni",
+        "empty": "Non sono ancora presenti traduzioni."
+    },
+    "productOptionsList": {
+        "title": "Traduzioni opzioni",
+        "empty": "Non sono ancora presenti traduzioni."
     },
     "widget": {
         "title": "Traduzioni",

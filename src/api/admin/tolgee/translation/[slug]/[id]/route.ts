@@ -27,6 +27,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     product: (id: string) => productModule.retrieveProduct(id, { select: ["*"] }),
     product_category: (id: string) => productModule.retrieveProductCategory(id, { select: ["*"] }),
     product_collection: (id: string) => productModule.retrieveProductCollection(id, { select: ["*"] }),
+    product_option: (id: string) => productModule.retrieveProductOption(id, { select: ["*"] }),
     product_tag: (id: string) => productModule.retrieveProductTag(id, { select: ["*"] }),
     product_type: (id: string) => productModule.retrieveProductType(id, { select: ["*"] }),
     product_variant: (id: string) => productModule.retrieveProductVariant(id, { select: ["*"] }),

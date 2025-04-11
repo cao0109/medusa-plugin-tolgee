@@ -38,7 +38,7 @@ Tolgee is all about making the translation process as simple as possible. For mo
 | Product collections                            | ✅         |
 | Product categories                             | ✅         |
 | Product variants                               | ✅         |
-| Product options                               | Coming soon |
+| Product options                                | ✅         |
 | Product types                                  | ✅         |
 | Product tags                                   | ✅         |
 | Shipping options                               | ✅         |

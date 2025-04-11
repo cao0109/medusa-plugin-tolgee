@@ -1,7 +1,5 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk";
-import { AdminShippingOption, AdminStockLocation, DetailWidgetProps } from "@medusajs/framework/types";
-import { useQuery } from "@tanstack/react-query";
-import { sdk } from "../lib/sdk";
+import { AdminProduct, AdminProductOption, DetailWidgetProps } from "@medusajs/framework/types";
 import { Drawer, Heading, IconButton, Kbd } from "@medusajs/ui";
 import { XMarkMini } from "@medusajs/icons";
 import { Suspense } from "react";
@@ -12,59 +10,41 @@ import { ShippingOptionCard } from "../components/shipping-option-card";
 import { useTranslation } from "react-i18next"
 import PluginI18n from "../components/PluginI18n";
 
-const ShippingOptionWidget = TranslationWidget("shipping_option");
+const ProductOptionWidget = TranslationWidget("product_option");
 
-const SOWidget = ({ data }: DetailWidgetProps<AdminStockLocation>) => {
-    const { id } = data;
+const ProductOptionsInProductWidget = ({ data }: DetailWidgetProps<AdminProduct>) => {
+    const { options } = data;
     const { t } = useTranslation("tolgee")
 
-    const { data: { stock_location } = {}, isLoading } = useQuery({
-        queryFn: () => sdk.admin.stockLocation.retrieve(id, { fields: "name,*sales_channels,*address,fulfillment_sets.type,fulfillment_sets.name,*fulfillment_sets.service_zones.geo_zones,*fulfillment_sets.service_zones,*fulfillment_sets.service_zones.shipping_options,*fulfillment_sets.service_zones.shipping_options.rules,*fulfillment_sets.service_zones.shipping_options.shipping_profile,*fulfillment_providers" }),
-        queryKey: ["shipping_options"],
-    })
-
-    const shipping_options = stock_location?.fulfillment_sets
-        ?.flatMap(fs => fs.service_zones
-            .flatMap(sz => sz.shipping_options
-                .map(option => ({
-                    fset_type: `${fs.type[0].toUpperCase()}${fs.type.slice(1)}`,
-                    zone_name: sz.name,
-                    option
-                })))) ?? []
-
-    const isEmpty = !shipping_options?.length;
-
+    const isEmpty = !options?.length;
     return (
         <PluginI18n>
             <Container>
-                <Header title={t("shippingOptionsList.title")} subtitle={isEmpty ? t("shippingOptionsList.empty") : undefined} />
-                {isLoading ?
-                    <div className="px-6 py-4">Loading...</div> :
-                    !isEmpty && ShippingOptionsGrid(shipping_options, t("widget.title"))
-                }
+                <Header title={t("productOptionsList.title")} subtitle={isEmpty ? t("productOptionsList.empty") : undefined} />
+                {!isEmpty && OptionsGrid(options, t("widget.title"))}
             </Container>
         </PluginI18n>
     )
 }
 
 export const config = defineWidgetConfig({
-    zone: "location.details.side.after",
+    zone: "product.details.side.after",
 })
 
-export default SOWidget;
+export default ProductOptionsInProductWidget;
 
-function ShippingOptionsGrid(shipping_options: {
-    fset_type: string;
-    zone_name: string;
-    option: AdminShippingOption;
-}[], title: string) {
+function OptionsGrid(options: AdminProductOption[], title: string) {
+    // TODO: causes too few/too many hooks error when loading conditionally. also in SO list widget
+    // passing in the title as prop to the widget for now.
+    // const { t } = useTranslation("tolgee")
+
     return (
         <div className="px-6 py-4 grid gap-4 grid-cols-1 sm:grid-cols-2">
-            {shipping_options?.map(({ option, zone_name, fset_type }) => (
+            {options?.map((option) => (
                 <Drawer modal={false} key={option.id}>
                     <Drawer.Trigger asChild>
                         <button>
-                            <ShippingOptionCard labelKey={option.name} descriptionKey={`${fset_type} - ${zone_name}`} />
+                            <ShippingOptionCard labelKey={option.title} descriptionKey="" />
                         </button>
                     </Drawer.Trigger>
                     <Drawer.Content
@@ -79,7 +59,7 @@ function ShippingOptionsGrid(shipping_options: {
                                     </Heading>
                                 </Drawer.Title>
                                 <Drawer.Description className="sr-only">
-                                    {`Drawer with translations for shipping option ${option.name}`}
+                                    {`Drawer with translations for product option ${option.title}`}
                                 </Drawer.Description>
                             </div>
                             <div className="flex items-center gap-x-2">
@@ -102,7 +82,7 @@ function ShippingOptionsGrid(shipping_options: {
                                 <Suspense
                                     fallback={<div className="flex size-full flex-col"></div>}
                                 >
-                                    <ShippingOptionWidget data={option} />
+                                    <ProductOptionWidget data={option} />
                                 </Suspense>
                             </div>
                         </Drawer.Body>
