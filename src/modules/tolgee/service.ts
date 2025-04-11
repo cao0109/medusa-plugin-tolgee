@@ -1,7 +1,6 @@
 import { AxiosInstance, default as axios } from "axios";
 import { MedusaError } from "@medusajs/utils";
-import { ProductCategoryDTO, ProductCollectionDTO, ProductDTO, ShippingOptionDTO } from "@medusajs/framework/types";
-import { TolgeeAdminOptions, defaultSupportedProperties, SupportedModels } from "../../common";
+import { TolgeeAdminOptions, defaultSupportedProperties, SupportedModels, ModelDTO } from "../../common";
 
 export type TolgeeModuleConfig = {
     projectId: string;
@@ -169,7 +168,7 @@ class TolgeeModuleService {
     }
 
     async createModelTranslations(
-        models: (ProductDTO | ProductCategoryDTO | ProductCollectionDTO | ShippingOptionDTO)[],
+        models: ModelDTO[],
         type: SupportedModels
     ): Promise<string[]> {
         const keys = models.flatMap((model) =>

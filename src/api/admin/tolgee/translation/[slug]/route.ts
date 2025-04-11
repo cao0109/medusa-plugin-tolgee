@@ -13,6 +13,9 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     product: () => productModule.listProducts(undefined, { select: ["*"] }),
     product_category: () => productModule.listProductCategories(undefined, { select: ["*"] }),
     product_collection: () => productModule.listProductCollections(undefined, { select: ["*"] }),
+    product_tag: () => productModule.listProductTags(undefined, { select: ["*"] }),
+    product_type: () => productModule.listProductTypes(undefined, { select: ["*"] }),
+    product_variant: () => productModule.listProductVariants(undefined, { select: ["*"] }),
     shipping_option: () => fulfillmentModule.listShippingOptions(undefined, { select: ["*"] }),
   } satisfies Record<SupportedModels, unknown> // <- type assertion to ensure all keys are present
 
