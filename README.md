@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Medusa Plugin Tolgee</h1>
-  <p>A Medusa V2 version of the Tolgee plugin by Rigby and more.</p>
+  <p>A Medusa V2 version of the Tolgee plugin by Rigby, and much more.</p>
   
   <!-- Shields.io Badges -->
   <a href="https://github.com/rigby-sh/medusa-multilingual-tolgee/blob/main/LICENSE">
@@ -76,6 +76,8 @@ yarn add medusa-plugin-tolgee
 Once your Tolgee project is set up, add the plugin configuration to your Medusa store by modifying the `medusa-config.js` file. Here's what you need to include:
 
 ```javascript
+import { TolgeeModuleConfig } from 'medusa-plugin-tolgee'
+
 const plugins = [
   {
     resolve: `medusa-plugin-tolgee`,
@@ -86,7 +88,7 @@ const plugins = [
       keys: { // Optional
         product: ["title", "subtitle", "description"]
       }
-    },
+    } satisfies TolgeeModuleConfig,
   },
 ];
 ```
