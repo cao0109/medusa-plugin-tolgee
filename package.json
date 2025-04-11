@@ -24,11 +24,11 @@
     }
   },
   "keywords": [
-    "medusa-plugin",
+    "medusa-plugin-integration",
     "translation",
     "tolgee",
     "ecommerce",
-    "headless",
+    "medusa-plugin-cms",
     "medusa-v2",
     "medusa"
   ],
