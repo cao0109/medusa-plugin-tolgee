@@ -14,6 +14,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     product_category: () => productModule.listProductCategories(undefined, { select: ["*"] }),
     product_collection: () => productModule.listProductCollections(undefined, { select: ["*"] }),
     product_option: () => productModule.listProductOptions(undefined, { select: ["*"] }),
+    product_option_value: () => productModule.listProductOptionValues(undefined, { select: ["*"] }),
     product_tag: () => productModule.listProductTags(undefined, { select: ["*"] }),
     product_type: () => productModule.listProductTypes(undefined, { select: ["*"] }),
     product_variant: () => productModule.listProductVariants(undefined, { select: ["*"] }),

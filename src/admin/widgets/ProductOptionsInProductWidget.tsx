@@ -1,6 +1,6 @@
 import { defineWidgetConfig } from "@medusajs/admin-sdk";
 import { AdminProduct, AdminProductOption, DetailWidgetProps } from "@medusajs/framework/types";
-import { Drawer, Heading, IconButton, Kbd } from "@medusajs/ui";
+import { Divider, Drawer, Heading, IconButton, Kbd } from "@medusajs/ui";
 import { XMarkMini } from "@medusajs/icons";
 import { Suspense } from "react";
 import TranslationWidget from "../components/TranslationWidget";
@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next"
 import PluginI18n from "../components/PluginI18n";
 
 const ProductOptionWidget = TranslationWidget("product_option");
+const ProductOptionValueWidget = TranslationWidget("product_option_value");
 
 const ProductOptionsInProductWidget = ({ data }: DetailWidgetProps<AdminProduct>) => {
     const { options } = data;
@@ -82,7 +83,19 @@ function OptionsGrid(options: AdminProductOption[], title: string) {
                                 <Suspense
                                     fallback={<div className="flex size-full flex-col"></div>}
                                 >
-                                    <ProductOptionWidget data={option} />
+                                    <Heading className="text-ui-contrast-fg-primary ps-2 pb-4">
+                                        Option title
+                                    </Heading>
+                                    <ProductOptionWidget key={option.id} data={option} />
+                                    <Divider className="h-8" />
+                                    <Heading className="text-ui-contrast-fg-primary ps-2 pb-4">
+                                        Option values:
+                                    </Heading>
+                                    <div className="flex flex-col gap-y-2">
+                                        {option.values?.map((value) => (
+                                            <ProductOptionValueWidget key={value.id} data={value} />
+                                        ))}
+                                    </div>
                                 </Suspense>
                             </div>
                         </Drawer.Body>
