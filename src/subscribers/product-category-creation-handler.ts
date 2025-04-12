@@ -13,7 +13,7 @@ export default async function productCategoryCreationHandler({
     const translationModule = container.resolve(TOLGEE_MODULE);
     const { id } = data;
 
-    const category = await productService.retrieveProductCategory(id);
+    const category = await productService.retrieveProductCategory(id, { select: ["*"] });
     await translationModule.createModelTranslations([category], "product_category");
 }
 
