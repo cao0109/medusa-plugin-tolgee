@@ -18,5 +18,7 @@ export default async function productCreationHandler({
 }
 
 export const config: SubscriberConfig = {
+    // This event only exists as the module version(with prefix)
+    // can't use "shipping-option.created" directly
     event: FulfillmentEvents.SHIPPING_OPTION_CREATED
 };

@@ -3,7 +3,7 @@ import {
     type SubscriberArgs,
 } from "@medusajs/medusa";
 import { TOLGEE_MODULE } from "../modules/tolgee";
-import { Modules, ProductEvents } from "@medusajs/framework/utils";
+import { Modules } from "@medusajs/framework/utils";
 
 export default async function productOptionValueCreationHandler({
     event: { data },
@@ -13,12 +13,13 @@ export default async function productOptionValueCreationHandler({
     const translationModule = container.resolve(TOLGEE_MODULE);
     const { id } = data;
 
-    const [value = undefined] = await productService.listProductOptionValues({ id });
-    if (!value)
-        return
-    await translationModule.createModelTranslations([value], "product_option_value");
+    // TODO: replace with retrieveProductOptionValue when implemented, 
+    // for now passing all the values to the translation module. Already existing ones will be skipped
+    const option = await productService.retrieveProductOption(id, { relations: ["values"] });
+    await translationModule.createModelTranslations(option.values, "product_option_value");
 }
 
 export const config: SubscriberConfig = {
-    event: ProductEvents.PRODUCT_OPTION_VALUE_CREATED
+    // TODO: replace with product-option-value.updated when implemented
+    event: "product-option.updated"
 };

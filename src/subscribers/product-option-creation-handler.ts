@@ -13,10 +13,11 @@ export default async function productOptionCreationHandler({
     const translationModule = container.resolve(TOLGEE_MODULE);
     const { id } = data;
 
-    const option = await productService.retrieveProductOption(id);
+    const option = await productService.retrieveProductOption(id, { relations: ["values"] });
     await translationModule.createModelTranslations([option], "product_option");
+    await translationModule.createModelTranslations(option.values, "product_option_value");
 }
 
 export const config: SubscriberConfig = {
-    event: ProductEvents.PRODUCT_OPTION_CREATED
+    event: "product-option.created"
 };

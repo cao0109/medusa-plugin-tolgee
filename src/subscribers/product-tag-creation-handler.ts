@@ -18,5 +18,5 @@ export default async function productTagCreationHandler({
 }
 
 export const config: SubscriberConfig = {
-    event: ProductEvents.PRODUCT_TAG_CREATED
+    event: "product-tag.created"
 };

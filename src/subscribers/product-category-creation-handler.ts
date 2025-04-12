@@ -18,5 +18,7 @@ export default async function productCategoryCreationHandler({
 }
 
 export const config: SubscriberConfig = {
-    event: ProductEvents.PRODUCT_CATEGORY_CREATED
+    // TODO: replace all with ProductEvents.* constants maybe? 
+    // they are different events and not all of them are emitted for now
+    event: "product-category.created"
 };

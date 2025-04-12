@@ -18,5 +18,5 @@ export default async function productVariantCreationHandler({
 }
 
 export const config: SubscriberConfig = {
-    event: ProductEvents.PRODUCT_VARIANT_CREATED
+    event: "product-variant.created"
 };

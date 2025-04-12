@@ -18,5 +18,5 @@ export default async function productCreationHandler({
 }
 
 export const config: SubscriberConfig = {
-    event: ProductEvents.PRODUCT_CREATED
+    event: "product.created"
 };
