@@ -2,6 +2,7 @@ import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
 import { Modules } from "@medusajs/framework/utils";
 import { TOLGEE_MODULE } from "../../../../../../modules/tolgee";
 import { SupportedModels } from "../../../../../../common";
+import { Context, FindConfig, ProductOptionValueDTO } from "@medusajs/framework/types";
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const translationModule = req.scope.resolve(TOLGEE_MODULE);
@@ -28,7 +29,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     product_category: (id: string) => productModule.retrieveProductCategory(id, { select: ["*"] }),
     product_collection: (id: string) => productModule.retrieveProductCollection(id, { select: ["*"] }),
     product_option: (id: string) => productModule.retrieveProductOption(id, { select: ["*"] }),
-    product_option_value: (id: string) => productModule.listProductOptionValues({ id }, { select: ["*"] }).then((values) => values[0]),
+    product_option_value: (id: string) => productModule.retrieveProductOptionValue(id, { select: ["*"] }),
     product_tag: (id: string) => productModule.retrieveProductTag(id, { select: ["*"] }),
     product_type: (id: string) => productModule.retrieveProductType(id, { select: ["*"] }),
     product_variant: (id: string) => productModule.retrieveProductVariant(id, { select: ["*"] }),
@@ -56,3 +57,11 @@ export const DELETE = async (req: MedusaRequest, res: MedusaResponse) => {
     return res.status(500).json(e)
   }
 };
+
+// TODO: the method exists but not on the upstream interface
+// remove when added
+declare module "@medusajs/framework/types" {
+  interface IProductModuleService {
+    retrieveProductOptionValue(id: string, config?: FindConfig<ProductOptionValueDTO>, sharedContext?: Context): Promise<ProductOptionValueDTO>;
+  }
+}
