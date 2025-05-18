@@ -144,14 +144,16 @@ class TolgeeModuleService {
 
     async createNewKeyWithTranslation(keys: {
         id: string,
+        tag: string,
         keyName: string,
         translation: string
     }[]): Promise<any> {
         try {
             await this.client_.post(`/keys/import`,
                 {
-                    keys: keys.map(({ id, keyName, translation }) => ({
+                    keys: keys.map(({ id, tag, keyName, translation }) => ({
                         name: `${id}.${keyName}`,
+                        tags: [tag],
                         namespace: id,
                         translations: { [this.defaultLanguage!]: translation },
                     }))
@@ -174,6 +176,7 @@ class TolgeeModuleService {
         const keys = models.flatMap((model) =>
             this.options_.keys?.[type]?.map((key) => ({
                 id: model.id,
+                tag: type,
                 keyName: key,
                 translation: model?.[key] ?? ""
             })) ?? []
