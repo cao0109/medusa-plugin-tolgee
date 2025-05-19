@@ -9,6 +9,9 @@ export type TolgeeModuleConfig = {
     keys?: {
         [key in SupportedModels]?: string[];
     };
+    tags?: {
+        [key in SupportedModels]?: string[];
+    };
 };
 
 type TolgeeModuleConfigInternal = Omit<TolgeeModuleConfig, "keys"> &
@@ -144,16 +147,16 @@ class TolgeeModuleService {
 
     async createNewKeyWithTranslation(keys: {
         id: string,
-        tag: string,
+        tags: string[],
         keyName: string,
         translation: string
     }[]): Promise<any> {
         try {
             await this.client_.post(`/keys/import`,
                 {
-                    keys: keys.map(({ id, tag, keyName, translation }) => ({
+                    keys: keys.map(({ id, tags, keyName, translation }) => ({
                         name: `${id}.${keyName}`,
-                        tags: [tag],
+                        tags,
                         namespace: id,
                         translations: { [this.defaultLanguage!]: translation },
                     }))
@@ -176,7 +179,7 @@ class TolgeeModuleService {
         const keys = models.flatMap((model) =>
             this.options_.keys?.[type]?.map((key) => ({
                 id: model.id,
-                tag: type,
+                tags: this.options_.tags?.[type] ?? [type],
                 keyName: key,
                 translation: model?.[key] ?? ""
             })) ?? []

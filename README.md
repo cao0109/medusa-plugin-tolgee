@@ -87,6 +87,9 @@ const plugins = [
       projectId: "your_tolgee_project_id",
       keys: { // Optional
         product: ["title", "subtitle", "description"]
+      },
+      tags: { // Optional
+        product: ["custom_tag"]
       }
     } satisfies TolgeeModuleConfig,
   },
