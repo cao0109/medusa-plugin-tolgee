@@ -136,7 +136,7 @@ If you want to translate a word, press the ALT button and click on the word in t
 
 **Medusa link**: All supported models have been augmented with a linked `translations` property. You can retrieve translations for a specific language or all languages by adding respectively `+translations.${countryCode}` or `+translations.*` to your query's `fields` property. For example:
 ```javascript
-const translationsField = countryCode ? `,+translations.${countryCode}` : ""
+const translationsField = countryCode ? `,+translations.${countryCode},+options.translations.${countryCode},+options.values.translations.${countryCode}` : ""
 
 sdk.client.fetch<{ products: StoreProductWithTranslations[]; count: number }>(
   `/store/products`,
@@ -162,6 +162,14 @@ sdk.client.fetch<{ products: StoreProductWithTranslations[]; count: number }>(
         ...product,
         // assign the translations for the desired language directly to the product 
         // so that the country code is not needed anymore
+        options: product.options?.map((option) => ({
+          ...option,
+          translations: countryCode ? option.translations?.[countryCode] : undefined,
+          values: option.values?.map(value => ({
+            ...value,
+            translations: countryCode ? value.translations?.[countryCode] : undefined,
+          }))
+        })),
         translations: countryCode ? product.translations?.[countryCode] : undefined,
       })),
       count,
