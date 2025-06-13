@@ -8,6 +8,10 @@ export type TolgeeModuleConfig = {
     apiKey: string
     baseURL: string
     ttl?: number
+    rateLimit?: {
+        maxRequests?: number
+        perMilliseconds?: number
+    }
     keys?: {
         [key in SupportedModels]?: string[]
     }
