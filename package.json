@@ -58,7 +58,6 @@
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.2.25",
     "awilix": "^8.0.1",
-    "axios": "^0.21.4",
     "pg": "^8.13.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
@@ -90,7 +89,9 @@
   "dependencies": {
     "@tolgee/core": "^6.2.2",
     "@tolgee/react": "^6.2.2",
-    "@tolgee/web": "^6.2.2"
+    "@tolgee/web": "^6.2.2",
+    "axios": "1.7.8",
+    "axios-cache-interceptor": "1.8.0"
   },
   "engines": {
     "node": ">=20"

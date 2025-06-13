@@ -1,5 +1,6 @@
 import { Module } from "@medusajs/framework/utils";
 import TolgeeModuleService from "./service";
+import tolgeeClientLoader from "./loaders/tolgee-client";
 
 export type { TolgeeModuleConfig } from "./service";
 
@@ -13,4 +14,5 @@ export const TOLGEE_MODULE = "tolgeeModule"
 
 export default Module(TOLGEE_MODULE, {
   service: TolgeeModuleService,
+  loaders: [tolgeeClientLoader]
 })
