@@ -1,12 +1,15 @@
 {
-  "name": "medusa-plugin-tolgee",
-  "description": "Medusa V2 Plugin to easily add translations to your models with Tolgee ",
-  "author": "SteelRazor47",
+  "name": "@hicity/medusa-plugin-tolgee",
+  "description": "Medusa V2 Plugin to easily add translations to your models with Tolgee Integration",
+  "author": "Allen Cao",
   "version": "1.3.0",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SteelRazor47/medusa-plugin-tolgee"
+    "url": "https://github.com/cao0109/medusa-plugin-tolgee"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     ".medusa/server"
@@ -30,7 +33,10 @@
     "ecommerce",
     "medusa-plugin-cms",
     "medusa-v2",
-    "medusa"
+    "medusa",
+    "medusa-plugin-tolgee",
+    "medusa-plugin-tolgee-v2",
+    "medusa-plugin-tolgee-v2-integration"
   ],
   "scripts": {
     "build": "medusa plugin:build",
