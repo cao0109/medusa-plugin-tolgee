@@ -145,8 +145,6 @@ class TolgeeModuleService {
         .map((lang) => lang.tag)
         .join(",");
 
-      console.log("tolgee langs", langs);
-
       const response = await Promise.all(
         ids.map(async (id) => {
           const { data } = await this.client_.get(

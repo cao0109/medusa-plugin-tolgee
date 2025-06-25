@@ -26,7 +26,6 @@ export default async function tolgeeClientLoader({
       },
       maxBodyLength: Infinity,
     });
-    console.log("maxRequests", options.rateLimit?.maxRequests);
     const rateLimitedClient = axiosRateLimit(client, {
       // Tolgee default rate limit is 400/m per user == 20/3sec
       // Default rate limit is set to 75% (15/3s) to have some margin
