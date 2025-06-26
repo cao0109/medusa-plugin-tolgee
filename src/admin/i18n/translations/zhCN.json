@@ -1,0 +1,21 @@
+{
+  "$schema": "./$schema.json",
+  "shippingOptionsList": {
+    "title": "翻译",
+    "empty": "暂无翻译。"
+  },
+  "productOptionsList": {
+    "title": "选项翻译",
+    "empty": "暂无翻译。"
+  },
+  "widget": {
+    "title": "翻译",
+    "subtitle": "按住 ALT 键并点击值进行翻译。",
+    "subtitleEmpty": "暂无翻译。",
+    "notTranslated": "未翻译（按住 ALT 键并点击此处）",
+    "add": "添加",
+    "syncAll": "全部同步",
+    "selectLanguage": "选择语言"
+  },
+  "loading": "加载中..."
+}

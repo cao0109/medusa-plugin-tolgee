@@ -1,0 +1,21 @@
+{
+  "$schema": "./$schema.json",
+  "shippingOptionsList": {
+    "title": "Переводы",
+    "empty": "Переводов пока нет."
+  },
+  "productOptionsList": {
+    "title": "Переводы опций",
+    "empty": "Переводов пока нет."
+  },
+  "widget": {
+    "title": "Переводы",
+    "subtitle": "Для перевода нажмите ALT и кликните по значению.",
+    "subtitleEmpty": "Переводов пока нет.",
+    "notTranslated": "Не переведено (нажмите ALT + кликните здесь)",
+    "add": "Добавить",
+    "syncAll": "Синхронизировать все",
+    "selectLanguage": "Выберите язык"
+  },
+  "loading": "Загрузка..."
+}

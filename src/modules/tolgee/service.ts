@@ -1,6 +1,7 @@
 import { MedusaError } from "@medusajs/utils";
 import axios, { AxiosResponseTransformer } from "axios";
 import { AxiosCacheInstance } from "axios-cache-interceptor";
+import { chunk } from "lodash";
 import {
   defaultSupportedProperties,
   ModelDTO,
@@ -16,6 +17,11 @@ export type TolgeeModuleConfig = {
   rateLimit?: {
     maxRequests?: number;
     perMilliseconds?: number;
+  };
+  retryConfig?: {
+    maxRetries?: number;
+    retryDelay?: number;
+    batchSize?: number;
   };
   keys?: {
     [key in SupportedModels]?: string[];
@@ -138,34 +144,70 @@ class TolgeeModuleService {
   }) {
     try {
       const country_code = filter.context?.country_code?.toLowerCase();
-
       const ids = Array.isArray(filter.id) ? filter.id : [filter.id];
 
       const langs = (await this.getOptions()).availableLanguages
         .map((lang) => lang.tag)
         .join(",");
 
-      const response = await Promise.all(
-        ids.map(async (id) => {
-          const { data } = await this.client_.get(
-            `/translations/${langs}?ns=${id}`
-          );
+      // 将 IDs 分成较小的批次
+      const batchSize = this.options_.retryConfig?.batchSize || 10;
+      const batches = chunk(ids, batchSize);
 
-          for (const key in data) {
-            // 如果数据不存在，跳过
-            if (!data[key]) continue;
+      const maxRetries = this.options_.retryConfig?.maxRetries || 3;
+      const retryDelay = this.options_.retryConfig?.retryDelay || 1000;
 
-            // 如果是嵌套结构（包含 id）
-            if (data[key][id]) {
-              data[key] = data[key][id];
+      const results: Array<{ id: string; [key: string]: any }> = [];
+
+      for (const batch of batches) {
+        let retries = 0;
+        let success = false;
+
+        while (!success && retries < maxRetries) {
+          try {
+            const batchResults = await Promise.all(
+              batch.map(async (id) => {
+                const { data } = await this.client_.get(
+                  `/translations/${langs}?ns=${id}`,
+                  {
+                    timeout: 10000, // 10 秒超时
+                  }
+                );
+
+                for (const key in data) {
+                  if (!data[key]) continue;
+
+                  if (
+                    typeof data[key] === "object" &&
+                    data[key] !== null &&
+                    data[key][id]
+                  ) {
+                    data[key] = data[key][id];
+                  }
+                }
+                return { id, ...(country_code ? data[country_code] : data) };
+              })
+            );
+
+            results.push(...batchResults);
+            success = true;
+          } catch (error) {
+            retries++;
+            console.warn(
+              `Retry ${retries}/${maxRetries} for batch of ${batch.length} IDs. Error: ${error.message}`
+            );
+
+            if (retries === maxRetries) {
+              throw error;
             }
-            // 如果不是嵌套结构，说明是扁平结构，保持原样
-          }
-          return { id, ...(country_code ? data[country_code] : data) };
-        })
-      );
 
-      return response;
+            // 等待一段时间后重试
+            await new Promise((resolve) => setTimeout(resolve, retryDelay));
+          }
+        }
+      }
+
+      return results;
     } catch (error) {
       throw new MedusaError(
         MedusaError.Types.UNEXPECTED_STATE,

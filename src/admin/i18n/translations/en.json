@@ -1,21 +1,21 @@
 {
-    "$schema": "./$schema.json",
-    "shippingOptionsList": {
-        "title": "Translations",
-        "empty": "No translations present yet."
-    },
-    "productOptionsList": {
-        "title": "Options translations",
-        "empty": "No translations present yet."
-    },
-    "widget": {
-        "title": "Translations",
-        "subtitle": "To translate, ALT+click on the value.",
-        "subtitleEmpty": "No translations present yet.",
-        "notTranslated": "Not translated (press ALT + click here)",
-        "add": "Add",
-        "syncAll": "Sync all",
-        "selectLanguage": "Select a language"
-    },
-    "loading": "Loading..."
+  "$schema": "./$schema.json",
+  "shippingOptionsList": {
+    "title": "Translations",
+    "empty": "No translations present yet."
+  },
+  "productOptionsList": {
+    "title": "Options translations",
+    "empty": "No translations present yet."
+  },
+  "widget": {
+    "title": "Translations",
+    "subtitle": "To translate, ALT+click on the value.",
+    "subtitleEmpty": "No translations present yet.",
+    "notTranslated": "Not translated (press ALT + click here)",
+    "add": "Add",
+    "syncAll": "Sync all",
+    "selectLanguage": "Select a language"
+  },
+  "loading": "Loading..."
 }

@@ -1,0 +1,21 @@
+{
+  "$schema": "./$schema.json",
+  "shippingOptionsList": {
+    "title": "번역",
+    "empty": "아직 번역이 없습니다."
+  },
+  "productOptionsList": {
+    "title": "옵션 번역",
+    "empty": "아직 번역이 없습니다."
+  },
+  "widget": {
+    "title": "번역",
+    "subtitle": "번역하려면 ALT 키를 누른 상태에서 클릭하세요.",
+    "subtitleEmpty": "아직 번역이 없습니다.",
+    "notTranslated": "번역되지 않음 (ALT 키를 누른 상태에서 여기를 클릭)",
+    "add": "추가",
+    "syncAll": "모두 동기화",
+    "selectLanguage": "언어 선택"
+  },
+  "loading": "로딩 중..."
+}

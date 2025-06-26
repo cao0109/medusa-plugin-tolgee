@@ -1,0 +1,21 @@
+{
+  "$schema": "./$schema.json",
+  "shippingOptionsList": {
+    "title": "Traductions",
+    "empty": "Aucune traduction pour le moment."
+  },
+  "productOptionsList": {
+    "title": "Traductions des options",
+    "empty": "Aucune traduction pour le moment."
+  },
+  "widget": {
+    "title": "Traductions",
+    "subtitle": "Pour traduire, appuyez sur ALT et cliquez sur la valeur.",
+    "subtitleEmpty": "Aucune traduction pour le moment.",
+    "notTranslated": "Non traduit (appuyez sur ALT + cliquez ici)",
+    "add": "Ajouter",
+    "syncAll": "Tout synchroniser",
+    "selectLanguage": "Sélectionner une langue"
+  },
+  "loading": "Chargement..."
+}

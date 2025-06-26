@@ -2,7 +2,7 @@
   "name": "@hicity/medusa-plugin-tolgee",
   "description": "Medusa V2 Plugin to easily add translations to your models with Tolgee Integration",
   "author": "Allen Cao",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -96,8 +96,10 @@
     "@tolgee/core": "^6.2.2",
     "@tolgee/react": "^6.2.2",
     "@tolgee/web": "^6.2.2",
+    "@types/lodash": "^4.17.19",
     "axios": "1.7.8",
-    "axios-cache-interceptor": "1.8.0"
+    "axios-cache-interceptor": "1.8.0",
+    "lodash": "^4.17.21"
   },
   "engines": {
     "node": ">=20"
